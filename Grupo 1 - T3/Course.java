@@ -1,7 +1,7 @@
 package br.com.vainaweb.backend.t3quebratudo;
 
 public class Course {
-	int		hours;
+	int hours;
 	String	name;
 	String	desc;
 	double	price;
