@@ -6,106 +6,214 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-	static Scanner	sc = new Scanner(System.in);
-	private boolean	login = false;
-	static User			activeUser;
+    static Scanner sc = new Scanner(System.in);
+    private static boolean login = false;
+    static User activeUser;
+
+    public static void main(String args[]) {
+        List<Course> courses = new ArrayList<>();
+        List<User> users = new ArrayList<>();
+        String option;
+        boolean menu = true;
+
+        loginMenu(users);
+
+        courses.add(new Course("(1) Curso de Java", "Desvende os mistérios dessa linguagem maravilhosa", 49.99, 100));
+        courses.add(new Course("(2) Curso de Python", "Ssss Sss ssSSS ssssSs ssSss ssssS (Tá em cobres)", 9.99, 80));
+        courses.add(new Course("(3) Curso de UI/UX", "Desenvolva as telas mais brabas do mercado", 49.99, 50));
+        courses.add(new Course("(4) Curso de Javascript", "Um pouquinho de web é sempre bom né?", 200, 10));
+        courses.add(new Course("(5) Curso de Curso", "Seja o curseiro mais cursador do país", 50, 300));
+        courses.add(new Course("(6) Curso de Palhaço", "Receba pra fazer gracinha", 20, 80));
+        courses.add(new Course("(7) Curso de Binário", "Aprenda a diferença entre 0 e 1", 110, 101));
+        courses.add(new Course("(8) Curso de Suporte", "Pra suportar quem você não aguenta mais", 39.99, 100));
+        courses.add(new Course("(9) Curso de Paciência", "Essencial pra quem comprou o curso 1", 20, 400));
+        courses.add(new Course("(10) Curso de Porrada", "Pra estar sempre preparado pra tudo", 59.99, 250));
+
+        while (menu) {
+            System.out.println("Seja muito bem-vindo " + activeUser.getUsername() + ". Escolha a opção desejada: "
+                    + "\n1 - Lista de cursos disponíveis"
+                    + "\n2 - Comprar cursos"
+                    + "\n3 - Meus cursos"
+                    + "\n4 - Adicionar Saldo"
+                    + "\n5 - Logout"
+                    + "\n6 - Fechar");
+
+            try {
+                option = sc.nextLine();
+
+                switch (option) {
+                    case "1":
+                        System.out.println("\n");
+                        for (Course course : courses) {
+                            if (!activeUser.myCourses.contains(course)) {
+                                System.out.println(course);
+                            }
+                        }
+
+                        if (activeUser.myCourses.size() == 10) {
+                            System.out.println("Você já comprou todos os cursos disponíveis!\n");
+                        }
+                        System.out.println("Pressione ENTER para voltar ao menu principal");
+                        sc.nextLine();
+                        break;
+
+                    case "2":
+                        if (activeUser.myCourses.size() < 10) {
+                            shoppingCart(courses);
+                        } else {
+                            System.out.println("Você já comprou todos os cursos disponíveis!\n");
+                        }
+                        break;
+
+                    case "3":
+                        if (activeUser.myCourses.size() > 0) {
+                            System.out.println("\n");
+                            activeUser.showCourses();
+                        } else {
+                            System.out.println("Você não possui nenhum curso!\n");
+                        }
+                        break;
+
+                    case "4":
+                        System.out.println("\nSeu saldo atual é de: R$" + String.format("%.2f", activeUser.getBalance())
+                                + "\nQual o valor que gostaria de acrescentar?");
+                        double value = sc.nextDouble();
+                        sc.nextLine();
+                        activeUser.addFunds(value); // atualização do saldo
+                        System.out.println("Seu novo saldo é de: R$" + String.format("%.2f", activeUser.getBalance()));
+                        System.out.println("\nPressione ENTER para voltar ao menu principal");
+                        sc.nextLine();
+                        break;
+
+                    case "5":
+                        login = false;
+                        System.out.println("\n");
+                        loginMenu(users);
+                        break;
+
+                    case "6":
+                        System.out.println("Volte sempre!");
+                        menu = false;
+                        break;
+
+                    default:
+                        System.out.println("Opção inválida!\n");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("\nOpção inválida\n");
+                sc.nextLine();
+            }
+        }
+        sc.close();
+    }
+// package br.com.vainaweb.backend.t3quebratudo;
+
+// import java.util.ArrayList;
+// import java.util.InputMismatchException;
+// import java.util.List;
+// import java.util.Scanner;
+
+// public class Main {
+// 	static Scanner	sc = new Scanner(System.in);
+// 	private boolean	login = false;
+// 	static User			activeUser;
 	
-	static public void Main(String args[]) {
-		List<Course>	courses = new ArrayList<>();
-		List<User>		users = new ArrayList<>();
-		String					option;
-		boolean			menu = true;
+// 	static public void Main(String args[]) {
+// 		List<Course>	courses = new ArrayList<>();
+// 		List<User>		users = new ArrayList<>();
+// 		String					option;
+// 		boolean			menu = true;
 		
-		loginMenu(users);
+// 		loginMenu(users);
 		
-		courses.add( new Course("(1) Curso de Java", "Desvende os misterios dessa linguagem maravilhosa", 49.99, 100));
-		courses.add( new Course("(2) Curso de Python", "Ssss Sss ssSSS ssssSs ssSss ssssS (Tá em cobres)", 9.99, 80));
-		courses.add( new Course("(3) Curso de UI/UX", "Desenvolva as telas mais brabas do mercado", 49.99, 50));
-		courses.add( new Course("(4) Curso de Javascript", "Um pouquinho de web é sempre bom né?", 200, 10));
-		courses.add( new Course("(5) Curso de Curso", "Seja o curseiro mais cursador do país", 50, 300));
-		courses.add( new Course("(6) Curso de Palhaço", "Receba pra fazer gracinha", 20, 80));
-		courses.add( new Course("(7) Curso de Binario", "Aprenda a diferença entre 0 e 1", 110, 101));
-		courses.add( new Course("(8) Curso de Suporte", "Pra suportar quem você não aguenta mais", 39.99, 100));
-		courses.add( new Course("(9) Curso de Paciencia", "Essencial pra quem comprou o curso 1", 20, 400));
-		courses.add( new Course("(10) Curso de Porrada", "Pra estar sempre preparado pra tudo", 59.99, 250));
+// 		courses.add( new Course("(1) Curso de Java", "Desvende os misterios dessa linguagem maravilhosa", 49.99, 100));
+// 		courses.add( new Course("(2) Curso de Python", "Ssss Sss ssSSS ssssSs ssSss ssssS (Tá em cobres)", 9.99, 80));
+// 		courses.add( new Course("(3) Curso de UI/UX", "Desenvolva as telas mais brabas do mercado", 49.99, 50));
+// 		courses.add( new Course("(4) Curso de Javascript", "Um pouquinho de web é sempre bom né?", 200, 10));
+// 		courses.add( new Course("(5) Curso de Curso", "Seja o curseiro mais cursador do país", 50, 300));
+// 		courses.add( new Course("(6) Curso de Palhaço", "Receba pra fazer gracinha", 20, 80));
+// 		courses.add( new Course("(7) Curso de Binario", "Aprenda a diferença entre 0 e 1", 110, 101));
+// 		courses.add( new Course("(8) Curso de Suporte", "Pra suportar quem você não aguenta mais", 39.99, 100));
+// 		courses.add( new Course("(9) Curso de Paciencia", "Essencial pra quem comprou o curso 1", 20, 400));
+// 		courses.add( new Course("(10) Curso de Porrada", "Pra estar sempre preparado pra tudo", 59.99, 250));
 		
-		while (menu) 
-		{
-			System.out.println("Seja muito bem-vindo " + activeUser.getUsername() + " escolha a opção desejada: "
-					+ "\n1 - Lista de cursos disponíveis"
-					+ "\n2 - Comprar cursos"
-					+ "\n3 - Meus cursos"
-					+ "\n4 - Adicionar Saldo"
-					+ "\n5 - Logout"
-					+ "\n6 - Fechar");
+// 		while (menu) 
+// 		{
+// 			System.out.println("Seja muito bem-vindo " + activeUser.getUsername() + " escolha a opção desejada: "
+// 					+ "\n1 - Lista de cursos disponíveis"
+// 					+ "\n2 - Comprar cursos"
+// 					+ "\n3 - Meus cursos"
+// 					+ "\n4 - Adicionar Saldo"
+// 					+ "\n5 - Logout"
+// 					+ "\n6 - Fechar");
 			
-			try {
-				option = sc.nextInt();
-				sc.nextLine();
+// 			try {
+// 				option = sc.nextInt();
+// 				sc.nextLine();
 				
-				switch (option) {	
-				case 1: 
-					System.out.println("\n");
-			    	for (Course course : courses) {
-			    		if !activeUser.myCourses.contains(course) {
-			    			System.out.println(course);
-			    		}
+// 				switch (option) {	
+// 				case 1: 
+// 					System.out.println("\n");
+// 			    	for (Course course : courses) {
+// 			    		if !activeUser.myCourses.contains(course) {
+// 			    			System.out.println(course);
+// 			    		}
 			    	
-			    	if (activeUser.myCourses.size() == 10) {
-			    		System.out.println("Você já comprou todos os cursos disponiveis!\n")
-			    	}
-			    	System.out.println("Pressione ENTER para voltar ao menu principal");
-			    	sc.nextLine();
-			    	break;
+// 			    	if (activeUser.myCourses.size() == 10) {
+// 			    		System.out.println("Você já comprou todos os cursos disponiveis!\n")
+// 			    	}
+// 			    	System.out.println("Pressione ENTER para voltar ao menu principal");
+// 			    	sc.nextLine();
+// 			    	break;
 					
-				case 2:
-			    	if (activeUser.myCourses.size() < 10) {
-			    		shoppingCart(courses);
-			    	} else {
-			    		System.out.println("Você já comprou todos os cursos disponiveis!\n");
-			    	}
-			    	break;
-				case 3:
-					if (activeUser.myCourses.size() > 0) {
-						System.out.println("\n");
-						activeUser.showCourses();
-					} else {
-						System.out.println("Você não possui nenhum curso!\n");
-					}
-					break;
+// 				case 2:
+// 			    	if (activeUser.myCourses.size() < 10) {
+// 			    		shoppingCart(courses);
+// 			    	} else {
+// 			    		System.out.println("Você já comprou todos os cursos disponiveis!\n");
+// 			    	}
+// 			    	break;
+// 				case 3:
+// 					if (activeUser.myCourses.size() > 0) {
+// 						System.out.println("\n");
+// 						activeUser.showCourses();
+// 					} else {
+// 						System.out.println("Você não possui nenhum curso!\n");
+// 					}
+// 					break;
 					
-				case 4:
-					System.out.println("\nSeu saldo atual é de: R$" + String.format("%.2f",activeUser.getBalance())
-					+ "\nQual o valor que gostaria de acrescentar?");
-					double value = sc.nextDouble();
-					sc.nextLine();
-					activeUser.addFunds(value); // atualização do saldo
-					System.out.println("Seu novo saldo é de: R$" + String.format("%.2f",activeUser.getBalance()));
-			    	System.out.println("\nPressione ENTER para voltar ao menu principal");
-			    	sc.nextLine();
-					break;
+// 				case 4:
+// 					System.out.println("\nSeu saldo atual é de: R$" + String.format("%.2f",activeUser.getBalance())
+// 					+ "\nQual o valor que gostaria de acrescentar?");
+// 					double value = sc.nextDouble();
+// 					sc.nextLine();
+// 					activeUser.addFunds(value); // atualização do saldo
+// 					System.out.println("Seu novo saldo é de: R$" + String.format("%.2f",activeUser.getBalance()));
+// 			    	System.out.println("\nPressione ENTER para voltar ao menu principal");
+// 			    	sc.nextLine();
+// 					break;
 					
-				case 5:
-					login = false;
-					System.out.println("\n");
-					loginMenu(users);
-					break;
+// 				case 5:
+// 					login = false;
+// 					System.out.println("\n");
+// 					loginMenu(users);
+// 					break;
 					
-				case 6:
-					System.out.println("Volte sempre!");
-					menu = false;
-					break;
+// 				case 6:
+// 					System.out.println("Volte sempre!");
+// 					menu = false;
+// 					break;
 			    	
-			    default:
-			    	System.out.println("Opção invalida!\n");
-				}
-			} catch (InputMismatchException e) {
-				System.out.println("\nOpção inválida\n");
-				sc.nextLine();
-				}
-		}
-		sc.close()
-	}
+// 			    default:
+// 			    	System.out.println("Opção invalida!\n");
+// 				}
+// 			} catch (InputMismatchException e) {
+// 				System.out.println("\nOpção inválida\n");
+// 				sc.nextLine();
+// 				}
+// 		}
+// 		sc.close()
+// 	}
 	
 	public static void shoppingCart(List<Course> courses) {
 		boolean	back = false;
